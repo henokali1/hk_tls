@@ -1,0 +1,143 @@
+{% extends 'dead_hang/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<h1>Performance Stats</h1>
+
+<div class="stats-grid">
+    <div class="stat-card card">
+        <span class="stat-label">Best Time</span>
+        <span class="stat-value">{{ best_hang }}s</span>
+    </div>
+    <div class="stat-card card">
+        <span class="stat-label">Average</span>
+        <span class="stat-value">{{ avg_hang }}s</span>
+    </div>
+    <div class="stat-card card">
+        <span class="stat-label">Sessions</span>
+        <span class="stat-value">{{ total_sessions }}</span>
+    </div>
+</div>
+
+<div class="card chart-container">
+    <canvas id="hangChart"></canvas>
+</div>
+
+<button class="btn btn-outline" style="width: 100%; margin-top: 20px;" onclick="confirmClear()">Clear All Data</button>
+
+<style>
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        padding: 16px 8px;
+        text-align: center;
+        margin-bottom: 0;
+    }
+
+    .stat-label {
+        display: block;
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    .chart-container {
+        padding: 16px;
+        min-height: 300px;
+    }
+
+    @media (max-width: 400px) {
+        .stat-value {
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const sessionData = {{ sessions_json| safe }};
+
+    if (sessionData.length > 0) {
+        const ctx = document.getElementById('hangChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: sessionData.map(s => s.date),
+                datasets: [{
+                    label: 'Hang Duration (s)',
+                    data: sessionData.map(s => s.duration),
+                    borderColor: '#38bdf8',
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#38bdf8',
+                    pointBorderColor: '#0f172a',
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)'
+                        },
+                        ticks: {
+                            color: '#94a3b8'
+                        }
+                    },
+                    x: {
+                        display: false // Hide long date strings on small screens
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        titleColor: '#f8fafc',
+                        bodyColor: '#38bdf8',
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: false
+                    }
+                }
+            }
+        });
+    }
+
+    async function confirmClear() {
+        if (confirm('Are you sure you want to delete all your history? This cannot be undone.')) {
+            const response = await fetch("{% url 'dead_hang:clear_data' %}", {
+                method: 'POST'
+            });
+            if (response.ok) {
+                window.location.reload();
+            }
+        }
+    }
+</script>
+{% endblock %}

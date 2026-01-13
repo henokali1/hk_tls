@@ -1,0 +1,270 @@
+{% extends 'dead_hang/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="timer-container">
+    <div class="status-badge" id="statusBadge">Idle</div>
+
+    <div class="timer-display" id="timerDisplay">00:00.00</div>
+
+    <div class="sensor-info card">
+        <div class="sensor-row">
+            <span>Motion Sensor</span>
+            <span id="sensorStatus" class="status-dot"></span>
+        </div>
+        <div class="sensor-row">
+            <span>Magnitude</span>
+            <span id="magnitudeDisplay">0.00 m/s²</span>
+        </div>
+    </div>
+
+    <div class="instructions card">
+        <h3>How to use:</h3>
+        <ol>
+            <li>Press <strong>START</strong> to enable sensors.</li>
+            <li>Put phone in pocket or armband.</li>
+            <li>Jump to the bar! The timer starts automatically.</li>
+            <li>Drop to the floor to stop the timer.</li>
+        </ol>
+    </div>
+
+    <button id="mainBtn" class="btn" style="width: 100%; margin-top: auto;">Start Session</button>
+</div>
+
+<style>
+    .timer-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+        gap: 20px;
+    }
+
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 99px;
+        background: var(--card-bg);
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .status-badge.active {
+        background: var(--primary-glow);
+        color: var(--primary);
+        border-color: var(--primary);
+        animation: pulse 2s infinite;
+    }
+
+    .timer-display {
+        font-size: 5rem;
+        font-weight: 800;
+        font-variant-numeric: tabular-nums;
+        margin: 20px 0;
+        text-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .sensor-info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sensor-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+    }
+
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #475569;
+    }
+
+    .status-dot.online {
+        background: var(--success);
+        box-shadow: 0 0 10px var(--success);
+    }
+
+    .instructions h3 {
+        margin: 0 0 12px 0;
+        font-size: 1rem;
+    }
+
+    .instructions ol {
+        margin: 0;
+        padding-left: 20px;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    @keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.6;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let state = 'IDLE'; // IDLE, READY, HANGING, COMPLETED
+    let startTime = 0;
+    let timerInterval = null;
+    let wakeLock = null;
+    let lastMagnitude = 0;
+
+    const JUMP_THRESHOLD = 18.0; // m/s^2
+    const LAND_THRESHOLD = 20.0; // m/s^2
+    const HANG_COOLDOWN = 1000; // ms to avoid detecting jump as land
+
+    const display = document.getElementById('timerDisplay');
+    const statusBadge = document.getElementById('statusBadge');
+    const sensorStatus = document.getElementById('sensorStatus');
+    const magDisplay = document.getElementById('magnitudeDisplay');
+    const mainBtn = document.getElementById('mainBtn');
+    const modal = document.getElementById('saveModal');
+    const modalTime = document.getElementById('modalTime');
+
+    async function requestWakeLock() {
+        try {
+            if ('wakeLock' in navigator) {
+                wakeLock = await navigator.wakeLock.request('screen');
+            }
+        } catch (err) {
+            console.error(`${err.name}, ${err.message}`);
+        }
+    }
+
+    function updateDisplay() {
+        if (state !== 'HANGING') return;
+        const now = performance.now();
+        const diff = (now - startTime) / 1000;
+        const mins = Math.floor(diff / 60).toString().padStart(2, '0');
+        const secs = Math.floor(diff % 60).toString().padStart(2, '0');
+        const mss = Math.floor((diff % 1) * 100).toString().padStart(2, '0');
+        display.textContent = `${mins}:${secs}.${mss}`;
+        requestAnimationFrame(updateDisplay);
+    }
+
+    function startSensor() {
+        if (typeof DeviceMotionEvent.requestPermission === 'function') {
+            DeviceMotionEvent.requestPermission()
+                .then(permissionState => {
+                    if (permissionState === 'granted') {
+                        window.addEventListener('devicemotion', handleMotion);
+                        setupUIForReady();
+                    }
+                })
+                .catch(console.error);
+        } else {
+            window.addEventListener('devicemotion', handleMotion);
+            setupUIForReady();
+        }
+    }
+
+    function setupUIForReady() {
+        state = 'READY';
+        statusBadge.textContent = 'Waiting for Jump...';
+        statusBadge.classList.add('active');
+        sensorStatus.classList.add('online');
+        mainBtn.textContent = 'Reset / Stop';
+        requestWakeLock();
+    }
+
+    function handleMotion(event) {
+        const acc = event.accelerationIncludingGravity;
+        if (!acc) return;
+
+        const mag = Math.sqrt(acc.x ** 2 + acc.y ** 2 + acc.z ** 2);
+        magDisplay.textContent = mag.toFixed(2) + ' m/s²';
+
+        if (state === 'READY') {
+            if (mag > JUMP_THRESHOLD) {
+                state = 'HANGING';
+                startTime = performance.now();
+                statusBadge.textContent = 'Hanging...';
+                updateDisplay();
+            }
+        } else if (state === 'HANGING') {
+            // Wait at least a second to avoid catching the jump impact
+            if (performance.now() - startTime > HANG_COOLDOWN) {
+                if (mag > LAND_THRESHOLD) {
+                    stopHang();
+                }
+            }
+        }
+    }
+
+    function stopHang() {
+        const finalTime = (performance.now() - startTime) / 1000;
+        state = 'COMPLETED';
+        statusBadge.textContent = 'Finished';
+        statusBadge.classList.remove('active');
+
+        modalTime.textContent = finalTime.toFixed(2) + 's';
+        modal.style.display = 'flex';
+
+        if (wakeLock) {
+            wakeLock.release().then(() => wakeLock = null);
+        }
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+        resetTimer();
+    }
+
+    function resetTimer() {
+        state = 'IDLE';
+        display.textContent = '00:00.00';
+        statusBadge.textContent = 'Idle';
+        statusBadge.classList.remove('active');
+        mainBtn.textContent = 'Start Session';
+        window.removeEventListener('devicemotion', handleMotion);
+        sensorStatus.classList.remove('online');
+    }
+
+    async function saveResult() {
+        const duration = parseFloat(modalTime.textContent);
+        try {
+            const response = await fetch("{% url 'dead_hang:save_result' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ duration })
+            });
+            if (response.ok) {
+                window.location.href = "{% url 'dead_hang:stats' %}";
+            }
+        } catch (err) {
+            alert('Failed to save result');
+        }
+    }
+
+    mainBtn.onclick = () => {
+        if (state === 'IDLE') {
+            startSensor();
+        } else {
+            resetTimer();
+        }
+    };
+</script>
+{% endblock %}
