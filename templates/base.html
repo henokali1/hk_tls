@@ -5,26 +5,28 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}HK TLS Tools{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}HK TLS | Premium Tools{% endblock %}</title>
     <link rel="icon" type="image/png" href="{% static 'dashboard/icons/logo.png' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #07090e;
-            --surface-dark: #0f121a;
+            --bg-dark: #02040a;
+            --surface-dark: #0a0d14;
             --primary: #38bdf8;
-            --primary-glow: rgba(56, 189, 248, 0.4);
+            --primary-rgb: 56, 189, 248;
+            --secondary: #818cf8;
             --accent: #f43f5e;
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --transition-speed: 0.3s;
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --transition-speed: 0.4s;
+            --ease: cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -35,20 +37,21 @@
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
             background-image:
-                radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(244, 63, 94, 0.03) 0%, transparent 50%);
+                radial-gradient(circle at 10%, rgba(var(--primary-rgb), 0.08), transparent 40%),
+                radial-gradient(circle at 90%, rgba(129, 140, 248, 0.04), transparent 40%);
+            line-height: 1.5;
         }
 
         .app-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem 2rem;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -58,8 +61,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4rem;
-            padding: 1rem 0;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(2, 4, 10, 0.8);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .logo-container {
@@ -71,21 +80,27 @@
         }
 
         .logo-img {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px var(--primary-glow);
-            transition: transform var(--transition-speed);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            padding: 2px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.1);
+            transition: all var(--transition-speed) var(--ease);
         }
 
         .logo-container:hover .logo-img {
-            transform: scale(1.05) rotate(5deg);
+            transform: scale(1.1) rotate(-5deg);
+            border-color: var(--primary);
+            box-shadow: 0 0 30px rgba(var(--primary-rgb), 0.3);
         }
 
         .logo-text {
+            font-family: 'Outfit', sans-serif;
             font-weight: 800;
-            font-size: 1.5rem;
-            letter-spacing: -1px;
+            font-size: 1.4rem;
+            letter-spacing: -0.5px;
             background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
             -webkit-background-clip: text;
             background-clip: text;
@@ -100,26 +115,29 @@
             padding: 4rem 0 2rem;
             text-align: center;
             color: var(--text-secondary);
-            font-size: 0.875rem;
-            opacity: 0.6;
+            font-size: 0.75rem;
+            opacity: 0.4;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        /* Glass Card Utility */
+        /* Reusable Components */
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all var(--transition-speed) var(--ease);
         }
 
         @media (max-width: 640px) {
             .app-container {
-                padding: 1.5rem;
+                padding: 1rem;
             }
 
-            header {
-                margin-bottom: 3rem;
+            .logo-text {
+                font-size: 1.1rem;
             }
         }
 
@@ -139,8 +157,8 @@
     <div class="app-container">
         <header>
             <a href="/" class="logo-container">
-                <img src="{% static 'dashboard/icons/logo.png' %}" alt="HK Logo" class="logo-img">
-                <span class="logo-text">HK TOOLS</span>
+                <img src="{% static 'dashboard/icons/logo.png' %}" alt="HK TLS" class="logo-img">
+                <span class="logo-text">HK TLS</span>
             </a>
             {% block header_actions %}{% endblock %}
         </header>
@@ -150,7 +168,7 @@
         </main>
 
         <footer>
-            &copy; 2026 HK TLS. Built with Precision.
+            &copy; 2026 HK TLS &bull; Engineered for Excellence
         </footer>
     </div>
 

@@ -4,15 +4,55 @@
 {% block title %}Dashboard | HK TLS Tools{% endblock %}
 
 {% block extra_style %}
+.hero {
+padding: 4rem 0;
+text-align: center;
+max-width: 800px;
+margin: 0 auto;
+}
+
+.hero-tag {
+display: inline-block;
+padding: 0.5rem 1rem;
+background: rgba(var(--primary-rgb), 0.1);
+color: var(--primary);
+border-radius: 100px;
+font-size: 0.75rem;
+font-weight: 700;
+letter-spacing: 1px;
+text-transform: uppercase;
+margin-bottom: 1.5rem;
+}
+
+.hero-title {
+font-family: 'Outfit', sans-serif;
+font-size: clamp(2.5rem, 8vw, 4.5rem);
+font-weight: 800;
+letter-spacing: -2px;
+line-height: 1;
+margin-bottom: 1.5rem;
+background: linear-gradient(to bottom, #fff, #94a3b8);
+-webkit-background-clip: text;
+background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+color: var(--text-secondary);
+font-size: 1.25rem;
+font-weight: 400;
+margin-bottom: 3rem;
+}
+
 .dashboard-grid {
 display: grid;
-grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
 gap: 2rem;
-margin-top: 1rem;
+margin-bottom: 4rem;
 }
 
 .app-card {
-padding: 2.5rem;
+padding: 2rem;
 display: flex;
 flex-direction: column;
 text-decoration: none;
@@ -21,24 +61,36 @@ position: relative;
 overflow: hidden;
 }
 
+.app-card::before {
+content: '';
+position: absolute;
+inset: 0;
+background: radial-gradient(800px circle at var(--x) var(--y), rgba(var(--primary-rgb), 0.06), transparent 40%);
+opacity: 0;
+transition: opacity 0.5s;
+}
+
+.app-card:hover::before {
+opacity: 1;
+}
+
 .app-card:hover {
-transform: translateY(-8px);
-background: rgba(255, 255, 255, 0.05);
-border-color: rgba(56, 189, 248, 0.3);
+transform: translateY(-5px);
+border-color: rgba(var(--primary-rgb), 0.3);
 box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
 }
 
 .app-icon {
 font-size: 2.5rem;
-margin-bottom: 1.5rem;
 width: 64px;
 height: 64px;
 display: flex;
 align-items: center;
 justify-content: center;
-background: rgba(255, 255, 255, 0.03);
-border-radius: 16px;
-transition: transform 0.3s ease;
+background: rgba(var(--primary-rgb), 0.06);
+border-radius: 20px;
+margin-bottom: 2rem;
+transition: transform 0.5s var(--ease);
 }
 
 .app-card:hover .app-icon {
@@ -46,244 +98,215 @@ transform: scale(1.1) rotate(-5deg);
 }
 
 .app-name {
+font-family: 'Outfit', sans-serif;
 font-size: 1.5rem;
-font-weight: 800;
+font-weight: 700;
 margin-bottom: 0.75rem;
-letter-spacing: -0.5px;
 }
 
 .app-description {
 color: var(--text-secondary);
 font-size: 1rem;
 line-height: 1.6;
+flex: 1;
 margin-bottom: 2rem;
 }
 
-.app-status {
-margin-top: auto;
+.app-action {
 display: flex;
 align-items: center;
 gap: 0.5rem;
-font-size: 0.875rem;
 font-weight: 600;
 color: var(--primary);
+font-size: 0.9rem;
 }
 
-.status-dot {
-width: 6px;
-height: 6px;
-background: var(--primary);
-border-radius: 50%;
-box-shadow: 0 0 10px var(--primary);
+.app-action svg {
+width: 18px;
+height: 18px;
+transition: transform 0.3s var(--ease);
 }
 
-.hero-section {
-margin-bottom: 4rem;
+.app-card:hover .app-action svg {
+transform: translateX(4px);
 }
 
-.hero-tag {
-display: inline-block;
-padding: 0.5rem 1rem;
-background: rgba(56, 189, 248, 0.1);
-color: var(--primary);
-border-radius: 100px;
-font-size: 0.75rem;
-font-weight: 800;
-text-transform: uppercase;
-letter-spacing: 1px;
-margin-bottom: 1.5rem;
-}
-
-.hero-title {
-font-size: clamp(2.5rem, 8vw, 4rem);
-font-weight: 800;
-line-height: 1.1;
-letter-spacing: -2px;
-margin-bottom: 1.5rem;
-background: linear-gradient(to right, #fff, #94a3b8);
--webkit-background-clip: text;
--webkit-text-fill-color: transparent;
-}
-
-.hero-subtitle {
-color: var(--text-secondary);
-font-size: 1.25rem;
-max-width: 600px;
-line-height: 1.6;
-}
-
-@media (max-width: 640px) {
-.dashboard-grid {
-grid-template-columns: 1fr;
-}
-}
-
-/* Install Banner */
+/* PWA Banner */
 #install-banner {
 position: fixed;
 bottom: 2rem;
 left: 50%;
-transform: translateX(-50%) translateY(100px);
+transform: translateX(-50%) translateY(150%);
 z-index: 1000;
-width: calc(100% - 4rem);
-max-width: 500px;
-padding: 1.5rem;
+width: calc(100% - 2rem);
+max-width: 480px;
+padding: 1.25rem;
 display: flex;
 align-items: center;
-justify-content: space-between;
-gap: 1.5rem;
-background: rgba(15, 18, 26, 0.8);
-border: 1px solid var(--primary);
-box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
-transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+gap: 1.25rem;
+border: 1px solid rgba(var(--primary-rgb), 0.2);
+box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #install-banner.show {
 transform: translateX(-50%) translateY(0);
 }
 
-.install-content {
-display: flex;
-align-items: center;
-gap: 1rem;
+.install-icon {
+width: 48px;
+height: 48px;
+border-radius: 12px;
+flex-shrink: 0;
 }
 
-.install-logo {
-width: 40px;
-height: 40px;
-border-radius: 8px;
+.install-info {
+flex: 1;
 }
 
-.install-text h3 {
-font-size: 1rem;
+.install-info h4 {
+font-family: 'Outfit', sans-serif;
 font-weight: 700;
-margin-bottom: 0.25rem;
+font-size: 1rem;
+margin-bottom: 0.15rem;
 }
 
-.install-text p {
+.install-info p {
 font-size: 0.8rem;
 color: var(--text-secondary);
 }
 
-.install-btn {
+.install-actions {
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+
+.btn-install {
 background: var(--primary);
 color: var(--bg-dark);
 border: none;
-padding: 0.6rem 1.2rem;
-border-radius: 12px;
+padding: 0.6rem 1rem;
+border-radius: 10px;
 font-weight: 700;
-font-size: 0.9rem;
+font-size: 0.85rem;
 cursor: pointer;
-transition: all 0.2s;
-white-space: nowrap;
+transition: transform 0.2s;
 }
 
-.install-btn:hover {
+.btn-install:hover {
 transform: scale(1.05);
-box-shadow: 0 0 15px var(--primary-glow);
 }
 
-.install-close {
+.btn-close-banner {
 background: transparent;
 border: none;
 color: var(--text-secondary);
 font-size: 1.5rem;
 cursor: pointer;
-padding: 0.5rem;
+padding: 0.4rem;
 line-height: 1;
-transition: color 0.2s;
 }
 
-.install-close:hover {
-color: #fff;
+@media (max-width: 640px) {
+.hero { padding: 2rem 0; }
+.dashboard-grid { grid-template-columns: 1fr; }
 }
 {% endblock %}
 
 {% block content %}
-<div class="hero-section">
-    <span class="hero-tag">Welcome back</span>
-    <h1 class="hero-title">HK TLS.</h1>
-    <p class="hero-subtitle">Elevate your productivity with our suite of custom-built professional tools.</p>
+<section class="hero">
+    <span class="hero-tag">HK TLS Engine</span>
+    <h1 class="hero-title">Tools Built for Performance.</h1>
+    <p class="hero-subtitle">Access your professional tool suite with seamless precision.</p>
+</section>
+
+<div class="dashboard-grid">
+    {% for app in apps %}
+    <a href="{{ app.url }}" class="glass-card app-card" style="--accent-color: {{ app.color }}">
+        <div class="app-icon">{{ app.icon }}</div>
+        <h2 class="app-name">{{ app.name }}</h2>
+        <p class="app-description">{{ app.description }}</p>
+        <div class="app-action">
+            Launch Application
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+        </div>
+    </a>
+    {% empty %}
+    <div class="glass-card" style="padding: 4rem; text-align: center; grid-column: 1/-1; opacity: 0.5;">
+        <p>No applications available in the dashboard.</p>
+    </div>
+    {% endfor %}
 </div>
 
-<!-- PWA Install Banner -->
+<!-- PWA Installation Prompt -->
 <div id="install-banner" class="glass-card">
-    <div class="install-content">
-        <img src="{% static 'dashboard/icons/logo.png' %}" alt="HK TLS" class="install-logo">
-        <div class="install-text">
-            <h3>Install HK TLS</h3>
-            <p>Add to your home screen for the best experience.</p>
-        </div>
-        <div style="display: flex; align-items: center; gap: 0.5rem;">
-            <button id="install-button" class="install-btn">Install Now</button>
-            <button id="close-install" class="install-close">&times;</button>
-        </div>
+    <img src="{% static 'dashboard/icons/logo.png' %}" alt="HK TLS" class="install-icon">
+    <div class="install-info">
+        <h4>Install HK TLS</h4>
+        <p>Add to your home screen for instant access.</p>
     </div>
-
-    <div class="dashboard-grid">
-        {% for app in apps %}
-        <a href="{{ app.url }}" class="glass-card app-card">
-            <div class="app-icon">{{ app.icon }}</div>
-            <h2 class="app-name">{{ app.name }}</h2>
-            <p class="app-description">{{ app.description }}</p>
-            <div class="app-status">
-                <span class="status-dot"></span>
-                Launch App
-            </div>
-        </a>
-        {% endfor %}
-
-        <!-- Placeholder for future apps -->
-        <div class="glass-card app-card" style="opacity: 0.4; cursor: default;">
-            <div class="app-icon">✨</div>
-            <h2 class="app-name">More Coming</h2>
-            <p class="app-description">We're building more tools to help you streamline your workflow.</p>
-            <div class="app-status" style="color: var(--text-secondary);">
-                Under Construction
-            </div>
-        </div>
+    <div class="install-actions">
+        <button id="install-button" class="btn-install">Install</button>
+        <button id="close-install" class="btn-close-banner">&times;</button>
     </div>
-    {% endblock %}
+</div>
+{% endblock %}
 
-    {% block extra_js %}
-    <script>
-        let deferredPrompt;
-        const installBanner = document.getElementById('install-banner');
-        const installButton = document.getElementById('install-button');
-        const closeButton = document.getElementById('close-install');
+{% block extra_js %}
+<script>
+    // Card Hover Effect
+    document.querySelectorAll('.app-card').forEach(card => {
+        card.onmousemove = e => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty('--x', `${x}px`);
+            card.style.setProperty('--y', `${y}px`);
+        };
+    });
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            // Prevent Chrome 67 and earlier from automatically showing the prompt
-            e.preventDefault();
-            // Stash the event so it can be triggered later.
-            deferredPrompt = e;
-            // Update UI to notify the user they can add to home screen
+    // PWA Install Logic
+    let deferredPrompt;
+    const installBanner = document.getElementById('install-banner');
+    const installButton = document.getElementById('install-button');
+    const closeButton = document.getElementById('close-install');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        // Show the banner automatically on entry (or with slight delay)
+        setTimeout(() => {
             installBanner.classList.add('show');
-        });
+        }, 1500);
+    });
 
-        installButton.addEventListener('click', (e) => {
-            // hide our user interface that shows our A2HS button
-            installBanner.classList.remove('show');
-            // Show the prompt
-            deferredPrompt.prompt();
-            // Wait for the user to respond to the prompt
-            deferredPrompt.userChoice.then((choiceResult) => {
-                if (choiceResult.outcome === 'accepted') {
-                    console.log('User accepted the A2HS prompt');
-                } else {
-                    console.log('User dismissed the A2HS prompt');
-                }
-                deferredPrompt = null;
-            });
+    installButton.addEventListener('click', (e) => {
+        installBanner.classList.remove('show');
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+                console.log('User accepted the install prompt');
+            }
+            deferredPrompt = null;
         });
+    });
 
-        closeButton.addEventListener('click', () => {
-            installBanner.classList.remove('show');
-        });
+    closeButton.addEventListener('click', () => {
+        installBanner.classList.remove('show');
+        // Optionally save to session storage that user closed it
+        sessionStorage.setItem('installPromptDismissed', 'true');
+    });
 
-        window.addEventListener('appinstalled', (evt) => {
-            console.log('HK TLS was installed.');
-            installBanner.classList.remove('show');
-        });
-    </script>
-    {% endblock %}
+    window.addEventListener('appinstalled', (evt) => {
+        installBanner.classList.remove('show');
+    });
+
+    // Check if app is already installed or prompt was dismissed this session
+    if (window.matchMedia('(display-mode: standalone)').matches || sessionStorage.getItem('installPromptDismissed')) {
+        installBanner.style.display = 'none';
+    }
+</script>
+{% endblock %}
