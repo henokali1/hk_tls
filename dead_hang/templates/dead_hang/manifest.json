@@ -1,5 +1,4 @@
-{% load static %
-}
+{% load static %}
 {
   "name": "Dead Hang Timer",
   "short_name": "DeadHang",
