@@ -1,312 +1,300 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Dashboard | HK TLS Tools{% endblock %}
+{% block title %}Dashboard | HK TLS{% endblock %}
 
 {% block extra_style %}
+/* Mobile-First Hero */
 .hero {
-padding: 4rem 0;
+padding: 2.5rem 0 2rem;
 text-align: center;
-max-width: 800px;
-margin: 0 auto;
 }
 
 .hero-tag {
 display: inline-block;
-padding: 0.5rem 1rem;
+padding: 4px 12px;
 background: rgba(var(--primary-rgb), 0.1);
 color: var(--primary);
 border-radius: 100px;
-font-size: 0.75rem;
+font-size: 0.7rem;
 font-weight: 700;
-letter-spacing: 1px;
 text-transform: uppercase;
-margin-bottom: 1.5rem;
+letter-spacing: 1px;
+margin-bottom: 1rem;
 }
 
 .hero-title {
 font-family: 'Outfit', sans-serif;
-font-size: clamp(2.5rem, 8vw, 4.5rem);
+font-size: 2rem;
 font-weight: 800;
-letter-spacing: -2px;
-line-height: 1;
-margin-bottom: 1.5rem;
-background: linear-gradient(to bottom, #fff, #94a3b8);
+line-height: 1.1;
+margin-bottom: 1rem;
+background: linear-gradient(to bottom, #fff, #a1a1aa);
 -webkit-background-clip: text;
-background-clip: text;
 -webkit-text-fill-color: transparent;
 }
 
 .hero-subtitle {
-color: var(--text-secondary);
-font-size: 1.25rem;
-font-weight: 400;
+color: var(--text-dim);
+font-size: 1rem;
+line-height: 1.5;
+max-width: 500px;
+margin: 0 auto;
+}
+
+/* Mobile-First Grid */
+.app-grid {
+display: grid;
+grid-template-columns: 1fr;
+gap: 1.25rem;
 margin-bottom: 3rem;
 }
 
-.dashboard-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-gap: 2rem;
-margin-bottom: 4rem;
-}
-
 .app-card {
-padding: 2rem;
-display: flex;
-flex-direction: column;
+padding: 1.5rem;
 text-decoration: none;
 color: inherit;
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+transition: transform 0.3s ease, border-color 0.3s ease;
 position: relative;
 overflow: hidden;
 }
 
-.app-card::before {
-content: '';
-position: absolute;
-inset: 0;
-background: radial-gradient(800px circle at var(--x) var(--y), rgba(var(--primary-rgb), 0.06), transparent 40%);
-opacity: 0;
-transition: opacity 0.5s;
-}
-
-.app-card:hover::before {
-opacity: 1;
-}
-
-.app-card:hover {
-transform: translateY(-5px);
-border-color: rgba(var(--primary-rgb), 0.3);
-box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
-}
-
-.app-icon {
-font-size: 2.5rem;
-width: 64px;
-height: 64px;
+.app-icon-wrapper {
+width: 56px;
+height: 56px;
 display: flex;
 align-items: center;
 justify-content: center;
-background: rgba(var(--primary-rgb), 0.06);
-border-radius: 20px;
-margin-bottom: 2rem;
-transition: transform 0.5s var(--ease);
+font-size: 2rem;
+background: rgba(255, 255, 255, 0.03);
+border: 1px solid var(--border);
+border-radius: 16px;
+flex-shrink: 0;
 }
 
-.app-card:hover .app-icon {
-transform: scale(1.1) rotate(-5deg);
+/* Fixed Oversized Image Issue */
+.app-icon-wrapper img {
+width: 100%;
+height: 100%;
+object-fit: contain;
+border-radius: 12px;
+}
+
+.app-info {
+flex: 1;
 }
 
 .app-name {
 font-family: 'Outfit', sans-serif;
-font-size: 1.5rem;
+font-size: 1.25rem;
 font-weight: 700;
-margin-bottom: 0.75rem;
+margin-bottom: 0.5rem;
 }
 
-.app-description {
-color: var(--text-secondary);
-font-size: 1rem;
-line-height: 1.6;
-flex: 1;
-margin-bottom: 2rem;
+.app-desc {
+color: var(--text-dim);
+font-size: 0.95rem;
+line-height: 1.5;
 }
 
-.app-action {
+.app-meta {
 display: flex;
 align-items: center;
-gap: 0.5rem;
-font-weight: 600;
+justify-content: space-between;
+margin-top: auto;
+padding-top: 1rem;
+border-top: 1px solid var(--border);
+}
+
+.launch-btn {
 color: var(--primary);
-font-size: 0.9rem;
+font-size: 0.85rem;
+font-weight: 700;
+display: flex;
+align-items: center;
+gap: 6px;
 }
 
-.app-action svg {
-width: 18px;
-height: 18px;
-transition: transform 0.3s var(--ease);
-}
-
-.app-card:hover .app-action svg {
-transform: translateX(4px);
-}
-
-/* PWA Banner */
+/* Mobile-First PWA Banner */
 #install-banner {
 position: fixed;
-bottom: 2rem;
-left: 50%;
-transform: translateX(-50%) translateY(150%);
-z-index: 1000;
-width: calc(100% - 2rem);
-max-width: 480px;
-padding: 1.25rem;
+bottom: 1.5rem;
+left: 1rem;
+right: 1rem;
+padding: 1rem;
 display: flex;
 align-items: center;
-gap: 1.25rem;
-border: 1px solid rgba(var(--primary-rgb), 0.2);
-box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+gap: 12px;
+z-index: 2000;
+transform: translateY(200%);
 transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+max-width: 500px;
+margin: 0 auto;
 }
 
 #install-banner.show {
-transform: translateX(-50%) translateY(0);
+transform: translateY(0);
 }
 
-.install-icon {
-width: 48px;
-height: 48px;
-border-radius: 12px;
-flex-shrink: 0;
+.banner-icon {
+width: 44px;
+height: 44px;
+border-radius: 10px;
+border: 1px solid var(--border);
 }
 
-.install-info {
+.banner-body {
 flex: 1;
+min-width: 0;
 }
 
-.install-info h4 {
-font-family: 'Outfit', sans-serif;
+.banner-title {
+font-size: 0.9rem;
 font-weight: 700;
-font-size: 1rem;
-margin-bottom: 0.15rem;
+margin-bottom: 2px;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
 }
 
-.install-info p {
-font-size: 0.8rem;
-color: var(--text-secondary);
+.banner-text {
+font-size: 0.75rem;
+color: var(--text-dim);
 }
 
-.install-actions {
+.banner-actions {
 display: flex;
 align-items: center;
-gap: 0.5rem;
+gap: 8px;
 }
 
-.btn-install {
+.btn-action {
 background: var(--primary);
-color: var(--bg-dark);
+color: #000;
 border: none;
-padding: 0.6rem 1rem;
-border-radius: 10px;
+padding: 8px 16px;
+border-radius: 8px;
+font-size: 0.8rem;
 font-weight: 700;
-font-size: 0.85rem;
 cursor: pointer;
-transition: transform 0.2s;
 }
 
-.btn-install:hover {
-transform: scale(1.05);
-}
-
-.btn-close-banner {
+.btn-close {
 background: transparent;
 border: none;
-color: var(--text-secondary);
+color: var(--text-dim);
 font-size: 1.5rem;
+padding: 4px;
 cursor: pointer;
-padding: 0.4rem;
 line-height: 1;
 }
 
-@media (max-width: 640px) {
-.hero { padding: 2rem 0; }
-.dashboard-grid { grid-template-columns: 1fr; }
+/* Desktop Adjustments */
+@media (min-width: 768px) {
+.hero { padding: 4rem 0 3rem; }
+.hero-title { font-size: 3.5rem; }
+.app-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+.app-card { padding: 2rem; }
+.app-icon-wrapper { width: 64px; height: 64px; }
+}
+
+@media (min-width: 1024px) {
+.app-grid { grid-template-columns: repeat(3, 1fr); }
 }
 {% endblock %}
 
 {% block content %}
 <section class="hero">
     <span class="hero-tag">HK TLS Engine</span>
-    <h1 class="hero-title">Tools Built for Performance.</h1>
-    <p class="hero-subtitle">Access your professional tool suite with seamless precision.</p>
+    <h1 class="hero-title">Tools Built for <br> Performance.</h1>
+    <p class="hero-subtitle">Premium utilities engineered for the ultimate professional experience.</p>
 </section>
 
-<div class="dashboard-grid">
+<div class="app-grid">
     {% for app in apps %}
-    <a href="{{ app.url }}" class="glass-card app-card" style="--accent-color: {{ app.color }}">
-        <div class="app-icon">{{ app.icon }}</div>
-        <h2 class="app-name">{{ app.name }}</h2>
-        <p class="app-description">{{ app.description }}</p>
-        <div class="app-action">
-            Launch Application
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
+    <a href="{{ app.url }}" class="glass app-card">
+        <div class="app-icon-wrapper">
+            {% if "/" in app.icon %}
+            <img src="{{ app.icon }}" alt="{{ app.name }}">
+            {% else %}
+            {{ app.icon }}
+            {% endif %}
+        </div>
+        <div class="app-info">
+            <h2 class="app-name">{{ app.name }}</h2>
+            <p class="app-desc">{{ app.description }}</p>
+        </div>
+        <div class="app-meta">
+            <span class="launch-btn">
+                Launch App
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </span>
         </div>
     </a>
     {% empty %}
-    <div class="glass-card" style="padding: 4rem; text-align: center; grid-column: 1/-1; opacity: 0.5;">
-        <p>No applications available in the dashboard.</p>
+    <div class="glass" style="grid-column: 1/-1; padding: 3rem; text-align: center; color: var(--text-dim);">
+        No applications found.
     </div>
     {% endfor %}
 </div>
 
-<!-- PWA Installation Prompt -->
-<div id="install-banner" class="glass-card">
-    <img src="{% static 'dashboard/icons/logo.png' %}" alt="HK TLS" class="install-icon">
-    <div class="install-info">
-        <h4>Install HK TLS</h4>
-        <p>Add to your home screen for instant access.</p>
+<!-- PWA Installation Banner -->
+<div id="install-banner" class="glass">
+    <img src="{% static 'dashboard/icons/logo.png' %}" alt="HK TLS" class="banner-icon">
+    <div class="banner-body">
+        <h4 class="banner-title">Install HK TLS</h4>
+        <p class="banner-text">Add to home screen</p>
     </div>
-    <div class="install-actions">
-        <button id="install-button" class="btn-install">Install</button>
-        <button id="close-install" class="btn-close-banner">&times;</button>
+    <div class="banner-actions">
+        <button id="install-button" class="btn-action">Install</button>
+        <button id="close-install" class="btn-close">&times;</button>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    // Card Hover Effect
-    document.querySelectorAll('.app-card').forEach(card => {
-        card.onmousemove = e => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            card.style.setProperty('--x', `${x}px`);
-            card.style.setProperty('--y', `${y}px`);
-        };
-    });
-
-    // PWA Install Logic
+    // PWA Logic
     let deferredPrompt;
-    const installBanner = document.getElementById('install-banner');
-    const installButton = document.getElementById('install-button');
-    const closeButton = document.getElementById('close-install');
+    const banner = document.getElementById('install-banner');
+    const installBtn = document.getElementById('install-button');
+    const closeBtn = document.getElementById('close-install');
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
-        // Show the banner automatically on entry (or with slight delay)
+        // Delay show for better UX
         setTimeout(() => {
-            installBanner.classList.add('show');
-        }, 1500);
-    });
-
-    installButton.addEventListener('click', (e) => {
-        installBanner.classList.remove('show');
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-                console.log('User accepted the install prompt');
+            if (!sessionStorage.getItem('pwa_dismissed')) {
+                banner.classList.add('show');
             }
-            deferredPrompt = null;
-        });
+        }, 2000);
     });
 
-    closeButton.addEventListener('click', () => {
-        installBanner.classList.remove('show');
-        // Optionally save to session storage that user closed it
-        sessionStorage.setItem('installPromptDismissed', 'true');
+    installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        banner.classList.remove('show');
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User Choice: ${outcome}`);
+        deferredPrompt = null;
     });
 
-    window.addEventListener('appinstalled', (evt) => {
-        installBanner.classList.remove('show');
+    closeBtn.addEventListener('click', () => {
+        banner.classList.remove('show');
+        sessionStorage.setItem('pwa_dismissed', 'true');
     });
 
-    // Check if app is already installed or prompt was dismissed this session
-    if (window.matchMedia('(display-mode: standalone)').matches || sessionStorage.getItem('installPromptDismissed')) {
-        installBanner.style.display = 'none';
+    // Check if app is already installed
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        banner.style.display = 'none';
     }
 </script>
 {% endblock %}
