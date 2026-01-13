@@ -6,7 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0f172a">
-    <title>Dead Hang Timer</title>
+    <title>Dead Hang | HK TLS</title>
+    <link rel="icon" type="image/png" href="{% static 'dead_hang/icon-192.png' %}">
     <link rel="manifest" href="{% url 'dead_hang:manifest' %}">
     <link rel="apple-touch-icon" href="{% static 'dead_hang/icon-192.png' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -179,6 +180,12 @@
     </div>
 
     <nav>
+        <a href="{% url 'dashboard:index' %}">
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            </svg>
+            Home
+        </a>
         <a href="{% url 'dead_hang:index' %}"
             class="{% if request.resolver_match.url_name == 'index' %}active{% endif %}">
             <svg class="icon" viewBox="0 0 24 24">

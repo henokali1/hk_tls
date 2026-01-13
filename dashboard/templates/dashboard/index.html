@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | HK TLS Tools{% endblock %}
+
+{% block extra_style %}
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    .app-card {
+        padding: 2.5rem;
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .app-card:hover {
+        transform: translateY(-8px);
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(56, 189, 248, 0.3);
+        box-shadow: 0 20px 40px -20px rgba(0, 0, 0, 0.5);
+    }
+
+    .app-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.03);
+        border-radius: 16px;
+        transition: transform 0.3s ease;
+    }
+
+    .app-card:hover .app-icon {
+        transform: scale(1.1) rotate(-5deg);
+    }
+
+    .app-name {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.5px;
+    }
+
+    .app-description {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+
+    .app-status {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--primary);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--primary);
+    }
+
+    .hero-section {
+        margin-bottom: 4rem;
+    }
+
+    .hero-tag {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: rgba(56, 189, 248, 0.1);
+        color: var(--primary);
+        border-radius: 100px;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-title {
+        font-size: clamp(2.5rem, 8vw, 4rem);
+        font-weight: 800;
+        line-height: 1.1;
+        letter-spacing: -2px;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(to right, #fff, #94a3b8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.25rem;
+        max-width: 600px;
+        line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+{% endblock %}
+
+{% block content %}
+    <div class="hero-section">
+        <span class="hero-tag">Welcome back</span>
+        <h1 class="hero-title">HK Workspace.</h1>
+        <p class="hero-subtitle">Elevate your productivity with our suite of custom-built professional tools.</p>
+    </div>
+
+    <div class="dashboard-grid">
+        {% for app in apps %}
+            <a href="{{ app.url }}" class="glass-card app-card">
+                <div class="app-icon">{{ app.icon }}</div>
+                <h2 class="app-name">{{ app.name }}</h2>
+                <p class="app-description">{{ app.description }}</p>
+                <div class="app-status">
+                    <span class="status-dot"></span>
+                    Launch App
+                </div>
+            </a>
+        {% endfor %}
+
+        <!-- Placeholder for future apps -->
+        <div class="glass-card app-card" style="opacity: 0.4; cursor: default;">
+            <div class="app-icon">✨</div>
+            <h2 class="app-name">More Coming</h2>
+            <p class="app-description">We're building more tools to help you streamline your workflow.</p>
+            <div class="app-status" style="color: var(--text-secondary);">
+                Under Construction
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -25,8 +25,12 @@ SECRET_KEY = 'django-insecure-*a5l_4ve3%$g*=0%(51)=ny^oeq5=y2!yd-y=^fep6uheaf^9n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['tls.henokcodes.com', 'localhost', '127.0.0.1', '3.29.35.209']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://tls.henokcodes.com',
+    'https://*.henokcodes.com',  # This covers all subdomains
+]
 
 # Application definition
 
@@ -38,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dead_hang',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +60,7 @@ ROOT_URLCONF = 'hk_tls.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
