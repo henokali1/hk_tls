@@ -1,7 +1,8 @@
-{% load static %}
+{% load static %
+}
 {
-  "name": "Dead Hang Timer",
-  "short_name": "DeadHang",
+  "name": "HK TLS",
+  "short_name": "HK TLS",
   "description": "Accelerometer-based dead hang timer for athletes.",
   "start_url": "/",
   "display": "standalone",
