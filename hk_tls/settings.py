@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dead_hang',
     'dashboard',
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -126,3 +127,37 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# PWA Settings
+PWA_CONFIG = {
+    "APP_NAME": 'HK TLS',
+    "APP_DESCRIPTION": "HK TLS - Premium Tools",
+    "APP_THEME_COLOR": '#07090e',
+    "APP_BACKGROUND_COLOR": '#07090e',
+    "APP_DISPLAY": 'standalone',
+    "APP_SCOPE": '/',
+    "APP_ORIENTATION": 'any',
+    "APP_START_URL": '/',
+    "APP_STATUS_BAR_COLOR": 'default',
+    "APP_ICONS": [
+        {
+            "src": "/static/dashboard/icons/logo.png",
+            "sizes": "160x160"
+        }
+    ],
+    "APP_ICONS_APPLE": [
+        {
+            "src": "/static/dashboard/icons/logo.png",
+            "sizes": "160x160"
+        }
+    ],
+    "APP_SPLASH_SCREEN": [
+        {
+            "src": "/static/dashboard/icons/logo.png",
+            "media": "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
+        }
+    ],
+    "APP_DIR": 'ltr',
+    "APP_LANG": 'en-US',
+    "FORCE_SERVICE_WORKER_UPDATE": True,
+}

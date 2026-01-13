@@ -5,4 +5,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('dashboard.urls')),
     path('dead-hang/', include('dead_hang.urls')),
+    path('', include('pwa.urls')),
 ]
